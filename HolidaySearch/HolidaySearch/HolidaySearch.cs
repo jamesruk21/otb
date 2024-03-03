@@ -9,8 +9,8 @@ namespace Holiday
 
         public HolidaySearch(IEnumerable<Flight> flights, IEnumerable<Hotel> hotels)
         {
-            _flights = flights;
-            _hotels = hotels;
+            _flights = flights ?? throw new ArgumentNullException(nameof(flights));
+            _hotels = hotels ?? throw new ArgumentNullException(nameof(hotels));
         }
 
         public IEnumerable<Result> Results(IEnumerable<string> departingFrom, string travelingTo, DateTime departureDate, int duration)
