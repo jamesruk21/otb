@@ -17,7 +17,8 @@ namespace Holiday
         {
             // Placeholder implementation
             return _flights
-                .Where(f => departingFrom.Contains(f.From) && f.To == travelingTo && f.DepartureDate == departureDate)
+                .Where(f => (!departingFrom.Any() || (departingFrom.Any() && departingFrom.Contains(f.From))))
+                .Where(f => f.To == travelingTo && f.DepartureDate == departureDate)
                 .SelectMany(f =>
                     _hotels.Where(h => h.LocalAirports.Contains(travelingTo))
                     .Where(h => h.ArrivalDate == departureDate && h.Nights == duration)
