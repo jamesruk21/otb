@@ -25,4 +25,13 @@
     <ProjectReference Include="..\HolidaySearch\HolidaySearch.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\flights.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\hotels.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

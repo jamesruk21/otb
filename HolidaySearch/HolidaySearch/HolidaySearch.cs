@@ -16,7 +16,13 @@ namespace Holiday
         public IEnumerable<Result> Results(IEnumerable<string> departingFrom, string travelingTo, DateTime departureDate, int duration)
         {
             // Placeholder implementation
-            return Enumerable.Empty<Result>();
+            return _flights
+                .Where(f => departingFrom.Contains(f.From) && f.To == travelingTo && f.DepartureDate == departureDate)
+                .SelectMany(f =>
+                    _hotels.Where(h => h.LocalAirports.Contains(travelingTo))
+                    .Where(h => h.ArrivalDate == departureDate && h.Nights == duration)
+                    .Select(h => new Result { Flight = f, Hotel = h }))
+                .OrderBy(r => r.TotalPrice);
         }
     }
 }
