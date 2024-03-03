@@ -1,12 +1,47 @@
+using Holiday.Models;
+using Holiday.Tests.Models;
+using HolidaySearch.Tests.Mappers;
+using Newtonsoft.Json;
+
 namespace Holiday.Tests
 {
     public class HolidaySearchTests
     {
+        private readonly IEnumerable<Flight> _flights;
+        private readonly IEnumerable<Hotel> _hotels;
+
+        public HolidaySearchTests()
+        {
+            _flights = GetFlights();
+            _hotels = GetHotels();
+        }
+
+        private IEnumerable<Flight> GetFlights()
+        {
+            string json = LoadJson("flights.json");
+            List<FlightDto> flightDtos = JsonConvert.DeserializeObject<List<FlightDto>>(json);
+            return flightDtos.Select(FlightMapper.MapToDomain).AsEnumerable();
+        }
+
+        private IEnumerable<Hotel> GetHotels()
+        {
+            string json = LoadJson("hotels.json");
+            IEnumerable<HotelDto> hotelDtos = JsonConvert.DeserializeObject<IEnumerable<HotelDto>>(json);
+            return hotelDtos.Select(HotelMapper.MapToDomain).AsEnumerable();
+        }
+
+        private string LoadJson(string fileName)
+        {
+            // Load JSON file content
+            string filePath = Path.Combine("TestData", fileName);
+            return File.ReadAllText(filePath);
+        }
+
         [Fact]
         public void Results_Returns_BestValueHoliday_Customer1()
         {
             // Arrange
-            var holidaySearch = new HolidaySearch();
+            var holidaySearch = new HolidaySearch(_flights, _hotels);
             var departingAirport = new List<string> { "MAN" };
 
             // Act
@@ -21,7 +56,7 @@ namespace Holiday.Tests
         public void Results_Returns_BestValueHoliday_Customer2()
         {
             // Arrange
-            var holidaySearch = new HolidaySearch();
+            var holidaySearch = new HolidaySearch(_flights, _hotels);
             var departingAirport = new List<string> { "LTN", "LGW" };
 
             // Act
@@ -36,7 +71,7 @@ namespace Holiday.Tests
         public void Results_Returns_BestValueHoliday_Customer3()
         {
             // Arrange
-            var holidaySearch = new HolidaySearch();
+            var holidaySearch = new HolidaySearch(_flights, _hotels);
             var departingAirport = new List<string>();
 
             // Act
